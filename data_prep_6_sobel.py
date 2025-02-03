@@ -21,14 +21,13 @@ def extract_data(path, intensity_list, label):
 
         # get sobel values
         sobelx_values = cv2.Sobel(src=down_samp, ddepth=cv2.CV_64F, dx=1, dy=0, ksize=5)
+        sobelx_values[sobelx_values<128] = 0
+        sobelx_values[sobelx_values>=128] = 1
         reshaped_sobel = np.mean(sobelx_values, axis=-1)
         sobelx_array = np.expand_dims(reshaped_sobel, axis=-1)
-        max_sobel = np.max(reshaped_sobel)
-        min_sobel = np.min(reshaped_sobel)
-        rescaled_sobel = (sobelx_array-min_sobel)/(max_sobel-min_sobel)
 
         # combine sobel and intensity
-        combined_data = np.concatenate([rescaled_array,rescaled_sobel],axis=-1)
+        combined_data = np.concatenate([rescaled_array,sobelx_array],axis=-1)
         data.append(combined_data)
         labels.append(label)
     return data,labels
@@ -36,12 +35,12 @@ def extract_data(path, intensity_list, label):
 
 # initialize storage of data and labels for negative class
 # Path to negative class
-negative_path1 = 'Sheet 1/'
+negative_path1 = '/home/bea/Documents/Sheet 1/'
 intensity_list = os.listdir(negative_path1+"Intensity")
 data1,labels1 = extract_data(negative_path1,intensity_list,0.0)
 print('success')
 
-negative_path3 = 'Sheet 3/'
+negative_path3 = '/home/bea/Documents/Sheet 3/'
 intensity_list = os.listdir(negative_path3+"Intensity")
 data3,labels3 = extract_data(negative_path3,intensity_list,0.0)
 print("success")
@@ -53,12 +52,12 @@ print(negative_labels.shape)
 
 
 # Path to positive class 
-positive_path1 = 'Sheet_6_2/'
+positive_path1 = '/home/bea/Documents/Sheet_6_2/'
 intensity_list = os.listdir(positive_path1+"Intensity")
 data6,labels6 = extract_data(positive_path1,intensity_list,1.0)
 print("success")
 
-positive_path2 = 'Sheet 7/'
+positive_path2 = '/home/bea/Documents/Sheet 7/'
 intensity_list = os.listdir(positive_path2+"Intensity")
 data7,labels7 = extract_data(positive_path2,intensity_list,1.0)
 print("success")
