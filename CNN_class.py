@@ -38,6 +38,7 @@ class CNN_3:
             tf.keras.layers.Dropout(self.drop_rate),
             tf.keras.layers.Dense(1, activation='sigmoid')
         ])
+        print(model.summary())
         return model
     
     def compile_model(self, learning_rate=0.00001, loss='binary_crossentropy', metrics=['accuracy']):
